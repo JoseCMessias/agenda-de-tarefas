@@ -15,20 +15,46 @@ namespace TrilhaApiDesafio.Controllers
             _context = context;
         }
 
+        [HttpPost]
+        public IActionResult Criar(Tarefa tarefa)
+        {
+            if (tarefa.Data == DateTime.MinValue)
+                return BadRequest(new { Erro = "A data da tarefa não pode ser vazia" });
+
+            // TODO: Adicionar a tarefa recebida no EF e salvar as mudanças (save changes)
+            //OK OK OK 1
+
+            _context.Add(tarefa);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(ObterPorId), new { id = tarefa.Id }, tarefa);
+        }
+
         [HttpGet("{id}")]
         public IActionResult ObterPorId(int id)
         {
             // TODO: Buscar o Id no banco utilizando o EF
             // TODO: Validar o tipo de retorno. Se não encontrar a tarefa, retornar NotFound,
             // caso contrário retornar OK com a tarefa encontrada
-            return Ok();
+            // OK OK OK 1
+
+            var tarefa = _context.Tarefas.Find(id);
+            if (tarefa == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tarefa);
         }
 
         [HttpGet("ObterTodos")]
         public IActionResult ObterTodos()
         {
             // TODO: Buscar todas as tarefas no banco utilizando o EF
-            return Ok();
+            // OK OK OK obs!!
+
+            var tarefas = _context.Tarefas.ToList();
+
+            return Ok(tarefas);
         }
 
         [HttpGet("ObterPorTitulo")]
@@ -36,7 +62,7 @@ namespace TrilhaApiDesafio.Controllers
         {
             // TODO: Buscar  as tarefas no banco utilizando o EF, que contenha o titulo recebido por parâmetro
             // Dica: Usar como exemplo o endpoint ObterPorData 
-            // OK OK OK
+            // OK OK OK 
             var tarefas = _context.Tarefas.Where(x => x.Titulo.Contains(titulo));
             return Ok(tarefas);
         }
@@ -56,20 +82,6 @@ namespace TrilhaApiDesafio.Controllers
             // OK OK OK 1   
             var tarefa = _context.Tarefas.Where(x => x.Status == status);
             return Ok(tarefa);
-        }
-
-        [HttpPost]
-        public IActionResult Criar(Tarefa tarefa)
-        {
-            if (tarefa.Data == DateTime.MinValue)
-                return BadRequest(new { Erro = "A data da tarefa não pode ser vazia" });
-
-            // TODO: Adicionar a tarefa recebida no EF e salvar as mudanças (save changes)
-            //OK OK OK 1
-
-            _context.Add(tarefa);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(ObterPorId), new { id = tarefa.Id }, tarefa);
         }
 
         [HttpPut("{id}")]
@@ -93,7 +105,7 @@ namespace TrilhaApiDesafio.Controllers
             tarefaBanco.Status = tarefa.Status;
             tarefaBanco.Titulo = tarefa.Titulo;
 
-            _context.Tarefas.Update(tarefaBanco);
+            _context.Update(tarefaBanco);
             _context.SaveChanges();
 
             return Ok(tarefaBanco);
