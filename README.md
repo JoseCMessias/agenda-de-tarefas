@@ -13,7 +13,7 @@ A sua aplicação deverá ser do tipo Web API ou MVC, fique a vontade para imple
 
 A sua classe principal, a classe de tarefa, deve ser a seguinte:
 
-![Diagrama da classe Tarefa](diagrama.png)
+![Diagrama da classe Tarefa](Agenda-de-tarefas/image/schema_tarefa.png)
 
 Não se esqueça de gerar a sua migration para atualização no banco de dados.
 
